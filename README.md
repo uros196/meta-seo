@@ -11,6 +11,19 @@ This module allows you to:
 - Automatically generate Open Graph (`og:`) and Twitter tags.
 - Manage robots instructions (`index`, `noindex`).
 
+## Requirements
+
+- PHP 8.1 or higher
+- Laravel 9.0 or higher
+
+## Installation
+
+You can install the package via composer:
+
+```bash
+composer require upantelic/meta-seo
+```
+
 ## Setup
 
 The package is automatically registered via Laravel's auto-discovery. You can immediately use the `Meta` facade or the `MetaManager` class.
@@ -113,7 +126,7 @@ Even if you use a shortcut method, you can still modify each attribute individua
 ```php
 Meta::setTitle('Main Page Title')
     // This will override ONLY the Open Graph title set by the shortcut above
-    ->ogItem(MetaField::OG_TITLE, 'Different Title for Facebook');
+    ->ogItem(MetaField::OgTitle, 'Different Title for Facebook');
 ```
 
 ### Accessing and Modifying Items
@@ -132,7 +145,7 @@ You can access any tag by its string key or `MetaField` enum. If it's the first 
 ```php
 // These will create the items if they don't exist
 Meta::item('keywords')->setValue('cms, laravel, seo');
-Meta::item(MetaField::OG_LOCALE)->setValue('en_US');
+Meta::item(MetaField::OgLocale)->setValue('en_US');
 ```
 
 #### 3. Accessing Open Graph and Twitter items
@@ -314,11 +327,11 @@ public function show($id)
     
     // Set type-specific Open Graph tags
     if ($content->type === 'article') {
-        Meta::ogItem(MetaField::OG_TYPE, 'article')
+        Meta::ogItem(MetaField::OgType, 'article')
             ->ogItem('article:published_time', $content->published_at)
             ->ogItem('article:author', $content->author->name);
     } elseif ($content->type === 'video') {
-        Meta::ogItem(MetaField::OG_TYPE, 'video.other')
+        Meta::ogItem(MetaField::OgType, 'video.other')
             ->ogItem('video:duration', $content->duration)
             ->setImage($content->thumbnail_url);
     }
@@ -369,7 +382,7 @@ public function show(Article $article)
     
     Meta::setTitle($article->getTranslation('title', $locale))
         ->setDescription($article->getTranslation('summary', $locale))
-        ->ogItem(MetaField::OG_LOCALE, $locale)
+        ->ogItem(MetaField::OgLocale, $locale)
         ->ogItem('og:locale:alternate', $locale === 'en' ? 'sr_RS' : 'en_US');
     
     return view('article.show', compact('article'));
